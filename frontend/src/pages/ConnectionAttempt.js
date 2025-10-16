@@ -263,6 +263,7 @@ const ConnectionAttempt = ({ currentUser, audioManager }) => {
     try {
       const response = await axios.post('http://localhost:8000/attempt-connection', {
         target_username: username,
+        current_username: currentUser.username,
         answers: answers
       });
 

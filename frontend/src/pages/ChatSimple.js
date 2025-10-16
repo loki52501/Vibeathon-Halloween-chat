@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import io from 'socket.io-client';
 import axios from 'axios';
 
 const ChatContainer = styled.div`
@@ -157,23 +156,6 @@ const SendButton = styled.button`
   }
 `;
 
-const StatusIndicator = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: ${props => props.connected ? '#4CAF50' : '#f44336'};
-  animation: ${props => props.connected ? 'pulse' : 'none'} 2s infinite;
-  
-  @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-  }
-`;
-
 const BackButton = styled.button`
   position: absolute;
   top: 1rem;
@@ -191,16 +173,15 @@ const BackButton = styled.button`
   }
 `;
 
-const Chat = ({ currentUser, onBack }) => {
+const ChatSimple = ({ currentUser, onBack }) => {
   const { username } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [socket, setSocket] = useState(null);
-  const [connected, setConnected] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [targetUser, setTargetUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
+  const pollingInterval = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -233,80 +214,21 @@ const Chat = ({ currentUser, onBack }) => {
     }
   }, [username, navigate]);
 
-  // Debug logging
   useEffect(() => {
-    console.log('Chat component - currentUser:', currentUser);
-    console.log('Chat component - targetUser:', targetUser);
-    console.log('Chat component - username param:', username);
-  }, [currentUser, targetUser, username]);
-
-  useEffect(() => {
-    // Don't initialize socket until we have both users
     if (!currentUser || !targetUser) return;
-
-    // Initialize socket connection
-    const newSocket = io('http://localhost:8000', {
-      transports: ['websocket', 'polling']
-    });
-
-    newSocket.on('connect', () => {
-      console.log('Connected to server');
-      setConnected(true);
-      
-      // Join the chat room
-      newSocket.emit('join_chat', {
-        username: currentUser.username,
-        targetUsername: targetUser.username
-      });
-    });
-
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from server');
-      setConnected(false);
-    });
-
-    newSocket.on('message', (data) => {
-      console.log('Received message:', data);
-      setMessages(prev => [...prev, {
-        id: data.id || Date.now(),
-        text: data.text,
-        sender: data.sender,
-        timestamp: data.timestamp || new Date().toISOString(),
-        isOwn: data.sender === currentUser.username
-      }]);
-    });
-
-    newSocket.on('user_joined', (data) => {
-      console.log('User joined:', data);
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        text: `${data.username} has entered the chat`,
-        sender: 'system',
-        timestamp: data.timestamp,
-        isOwn: false,
-        isSystem: true
-      }]);
-    });
-
-    newSocket.on('user_left', (data) => {
-      console.log('User left:', data);
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        text: `${data.username} has left the chat`,
-        sender: 'system',
-        timestamp: data.timestamp,
-        isOwn: false,
-        isSystem: true
-      }]);
-    });
-
-    setSocket(newSocket);
 
     // Load message history
     loadMessageHistory();
 
+    // Start polling for new messages
+    pollingInterval.current = setInterval(() => {
+      loadMessageHistory();
+    }, 2000); // Poll every 2 seconds
+
     return () => {
-      newSocket.close();
+      if (pollingInterval.current) {
+        clearInterval(pollingInterval.current);
+      }
     };
   }, [currentUser, targetUser]);
 
@@ -329,27 +251,39 @@ const Chat = ({ currentUser, onBack }) => {
     }
   };
 
-  const sendMessage = () => {
-    if (!newMessage.trim() || !socket || !connected || !currentUser || !targetUser) return;
+  const sendMessage = async () => {
+    console.log('sendMessage called:', { newMessage, currentUser, targetUser });
+    
+    if (!newMessage.trim() || !currentUser || !targetUser) {
+      console.log('sendMessage blocked:', { 
+        hasMessage: !!newMessage.trim(), 
+        hasCurrentUser: !!currentUser, 
+        hasTargetUser: !!targetUser 
+      });
+      return;
+    }
 
-    const messageData = {
-      id: Date.now(),
-      text: newMessage,
-      sender: currentUser.username,
-      targetUsername: targetUser.username,
-      timestamp: new Date().toISOString()
-    };
+    try {
+      console.log('Sending message to backend...');
+      const response = await axios.post('http://localhost:8000/send-message', {
+        content: newMessage,
+        target_username: targetUser.username,
+        current_username: currentUser.username
+      });
 
-    // Send via WebSocket
-    socket.emit('message', messageData);
+      console.log('Message sent successfully:', response.data);
 
-    // Add to local state immediately
-    setMessages(prev => [...prev, {
-      ...messageData,
-      isOwn: true
-    }]);
+      // Add message to local state
+      setMessages(prev => [...prev, {
+        ...response.data,
+        isOwn: true
+      }]);
 
-    setNewMessage('');
+      setNewMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Failed to send message. Please check if the backend is running.');
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -385,12 +319,11 @@ const Chat = ({ currentUser, onBack }) => {
   return (
     <ChatContainer>
       <BackButton onClick={handleBack}>← Back to Connections</BackButton>
-      <StatusIndicator connected={connected} />
       
       <ChatHeader>
         <Title>Mysterious Chat</Title>
         <Subtitle>
-          Chatting with {targetUser.username} • {connected ? 'Connected' : 'Disconnected'}
+          Chatting with {targetUser.username} • Simple Mode
         </Subtitle>
       </ChatHeader>
 
@@ -400,13 +333,13 @@ const Chat = ({ currentUser, onBack }) => {
             <Message key={message.id} isOwn={message.isOwn}>
               <MessageHeader>
                 <Sender isOwn={message.isOwn}>
-                  {message.sender === 'system' ? '👻 System' : message.sender}
+                  {message.sender}
                 </Sender>
                 <Timestamp>
                   {new Date(message.timestamp).toLocaleTimeString()}
                 </Timestamp>
               </MessageHeader>
-              <MessageText>{message.text}</MessageText>
+              <MessageText>{message.content}</MessageText>
             </Message>
           ))}
           <div ref={messagesEndRef} />
@@ -416,14 +349,17 @@ const Chat = ({ currentUser, onBack }) => {
           <MessageInput
             type="text"
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={(e) => {
+              console.log('Input changed:', e.target.value);
+              setNewMessage(e.target.value);
+            }}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            disabled={!connected}
+            autoFocus
           />
           <SendButton 
             onClick={sendMessage} 
-            disabled={!connected || !newMessage.trim()}
+            disabled={!newMessage.trim()}
           >
             Send
           </SendButton>
@@ -433,4 +369,4 @@ const Chat = ({ currentUser, onBack }) => {
   );
 };
 
-export default Chat;
+export default ChatSimple;

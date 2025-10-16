@@ -1,203 +1,219 @@
-# 🎃 Halloween Poe Chat - Spooky Connection App
+# 🎃 Halloween Poe Chat
 
-A Halloween-themed chat application where users connect through Edgar Allan Poe-inspired poetry riddles. Enter the realm of mysterious connections where souls meet through cryptic verses and spooky encounters!
+A spooky chat application inspired by Edgar Allan Poe where users connect through cryptic poems and mysterious questions. Built with Python FastAPI, React, PostgreSQL, and AWS Bedrock.
 
-## ✨ Features
+## 🌟 Features
 
-### 🔮 Core Functionality
-- **Mysterious Registration**: Users create 3 personal questions/answers that define their soul
-- **AI Poetry Generation**: Amazon Bedrock generates Poe-style poems from user answers
-- **Riddle Solving**: Other users must decipher poems to connect (5 attempts max)
-- **Connection System**: 2-minute cooldown between failed attempts
-- **Real-time Chat**: WebSocket-powered chat for connected souls
+- **Cryptic Registration**: Users provide 3 personal questions/answers that become a Poe-style poem
+- **Mysterious Connections**: Other users must solve the riddle to connect
+- **Dynamic Audio**: Ghostly background music that changes pitch based on answer accuracy
+- **Real-time Chat**: WebSocket-powered instant messaging
+- **Cooldown System**: 5 attempts with 2-minute cooldown for failed connections
+- **AWS Bedrock Integration**: AI-powered poem generation using Claude models
 
-### 🎵 Audio Experience
-- **Dynamic Background Music**: Spooky ambient sounds using Web Audio API
-- **Pitch-based Feedback**: Music pitch changes based on answer accuracy
-  - High pitch (1.2x) for close answers (2+ correct)
-  - Low pitch (0.8x) for wrong answers
-  - Very low pitch (0.5x) during cooldown
-- **Sound Effects**: Success, error, and warning sounds
+## 🛠️ Tech Stack
 
-### 🎨 Visual Design
-- **Gothic UI**: Dark, Halloween-themed interface with glowing effects
-- **Particle System**: Floating particles for atmospheric effect
-- **Smooth Animations**: Framer Motion animations for transitions
-- **Responsive Design**: Works on desktop and mobile devices
+### Backend
+- **Python 3.8+** with FastAPI
+- **PostgreSQL** database with SQLAlchemy ORM
+- **AWS Bedrock** for AI poem generation (optional)
+- **Psycopg2** for PostgreSQL connectivity
 
-## 🛠 Tech Stack
-
-- **Backend**: Python with FastAPI + SocketIO
-- **Frontend**: React with Node.js
-- **AI**: Amazon Bedrock (Claude) for poem generation
-- **Database**: SQLite for user data and connections
-- **Audio**: Web Audio API for dynamic sound generation
-- **Styling**: Styled Components + CSS animations
-
-## 📁 Project Structure
-
-```
-halloween-poe-chat/
-├── backend/                 # Python FastAPI server
-│   ├── main.py             # Main API server with WebSocket
-│   ├── requirements.txt    # Python dependencies
-│   └── env_example.txt     # Environment variables template
-├── frontend/               # React application
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/          # Main application pages
-│   │   └── App.js          # Main app component
-│   ├── public/             # Static assets
-│   └── package.json        # Node.js dependencies
-├── knowledge_base/         # Edgar Allan Poe data
-│   └── poe_poems.json      # Poems and vocabulary
-├── start_backend.py        # Backend startup script
-├── start_frontend.py       # Frontend startup script
-├── start_all.py           # Start both servers
-└── README.md              # This file
-```
+### Frontend
+- **React 18** with modern hooks
+- **Styled Components** for gothic styling
+- **Framer Motion** for spooky animations
+- **Web Audio API** for dynamic sound effects
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- AWS Account with Bedrock access
+- Python 3.8+ installed
+- Node.js 16+ and npm installed
+- PostgreSQL running locally
+- AWS account (optional, for AI features)
 
 ### 1. Clone and Setup
 ```bash
-git clone <repository-url>
-cd halloween-poe-chat
-```
+# Clone the repository
+git clone <your-repo-url>
+cd halloween-themed-ai-agent
 
-### 2. Backend Setup
-```bash
 # Install Python dependencies
 pip install -r backend/requirements.txt
 
-# Create environment file
-cp backend/env_example.txt backend/.env
-# Edit backend/.env with your AWS credentials
-```
-
-### 3. Frontend Setup
-```bash
 # Install Node.js dependencies
 cd frontend
 npm install
 cd ..
 ```
 
-### 4. Run the Application
-
-#### Option A: Start Both Servers
+### 2. Database Setup
 ```bash
-python start_all.py
+# Create PostgreSQL database
+createdb poe_chat
+
+# Set up environment variables
+cp backend/env_example.txt backend/.env
+# Edit backend/.env with your database credentials
 ```
 
-#### Option B: Start Separately
+### 3. Initialize Database
+```bash
+# Run the database setup script
+python backend/setup_database.py
+```
+
+### 4. Start the Application
 ```bash
 # Terminal 1 - Backend
-python start_backend.py
+cd backend
+python main.py
 
 # Terminal 2 - Frontend  
-python start_frontend.py
+cd frontend
+npm start
 ```
 
 ### 5. Access the Application
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
+- **API Docs**: http://localhost:8000/docs
+
+## 📁 Project Structure
+
+```
+halloween-themed-ai-agent/
+├── backend/
+│   ├── main.py                 # Main FastAPI server
+│   ├── database.py            # SQLAlchemy models
+│   ├── setup_database.py      # Database initialization
+│   ├── requirements.txt       # Python dependencies
+│   ├── .env                   # Environment variables
+│   └── env_example.txt        # Environment template
+├── frontend/
+│   ├── src/
+│   │   ├── App.js            # Main React app
+│   │   ├── components/       # React components
+│   │   └── pages/           # Page components
+│   ├── package.json         # Node.js dependencies
+│   └── public/              # Static assets
+├── knowledge_base/
+│   └── poe_poems.json       # Poe poems for fallback
+└── README.md               # This file
+```
 
 ## 🔧 Configuration
 
-### AWS Bedrock Setup
-1. Create an AWS account
-2. Enable Amazon Bedrock service
-3. Request access to Claude model
-4. Create IAM user with Bedrock permissions
-5. Add credentials to `backend/.env`:
-
+### Environment Variables (backend/.env)
 ```env
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=poe_chat
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+# AWS Bedrock (optional)
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key_here
-AWS_SECRET_ACCESS_KEY=your_secret_key_here
 ```
 
-### Environment Variables
-Create `backend/.env` with:
-```env
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-```
+### AWS Bedrock Setup (Optional)
+1. Go to AWS Console > Amazon Bedrock
+2. Request access to "Anthropic Claude 3 Sonnet"
+3. Wait for approval (usually takes a few minutes)
+4. Add your AWS credentials to `backend/.env`
+
+**Note**: The app works with fallback poem generation even without AWS Bedrock!
 
 ## 🎮 How to Use
 
-### 1. Registration
-- Enter a mysterious username and password
-- Create 3 personal questions and their answers
-- The AI generates a Poe-style poem from your answers
+### 1. Register a User
+- Go to http://localhost:3000
+- Click "Register" and fill in:
+  - Username and password
+  - 3 personal questions
+  - 3 corresponding answers
+- Get your cryptic poem generated by AI
 
-### 2. Finding Connections
-- Browse other users' poems
-- Choose someone to connect with
-- Attempt to solve their riddle
+### 2. Connect with Others
+- View the list of other users
+- Click "Attempt Connection" on someone
+- Answer their 3 questions based on their poem
+- Listen to the ghostly music change pitch!
 
-### 3. Solving Riddles
-- Read the target user's poem carefully
-- Enter your 3 answers based on the poem
-- Music pitch changes based on your accuracy
-- 5 attempts maximum, then 2-minute cooldown
+### 3. Chat
+- Successfully connect to chat in real-time
+- Messages are saved and synchronized
+- Enjoy the spooky atmosphere!
 
-### 4. Chatting
-- Successfully connected users can chat in real-time
-- Enjoy the spooky atmosphere with background music
+## 🧪 Testing
 
-## 🎵 Audio Features
+### Test the Backend
+```bash
+# Test API endpoints
+curl http://localhost:8000/users
+curl http://localhost:8000/docs
+```
 
-The app uses Web Audio API to create dynamic, spooky soundscapes:
-
-- **Background Music**: Procedurally generated ambient sounds
-- **Pitch Modulation**: Music pitch changes based on user performance
-- **Sound Effects**: Contextual audio feedback for actions
-- **Volume Control**: Adjustable audio levels
-
-## 🎨 Customization
-
-### Adding New Poe Poems
-Edit `knowledge_base/poe_poems.json` to add more poems and vocabulary.
-
-### Styling Changes
-Modify CSS in `frontend/src/index.css` and component styles for different themes.
-
-### Audio Customization
-Update `frontend/src/components/AudioManager.js` to change sound generation.
+### Test the Frontend
+- Open http://localhost:3000
+- Register two users
+- Make a successful connection attempt
+- Start chatting!
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **AWS Bedrock Access Denied**
-   - Ensure Bedrock is enabled in your AWS region
-   - Check IAM permissions for Bedrock access
-   - Verify Claude model access
+**Backend won't start:**
+- Check PostgreSQL is running
+- Verify database credentials in `.env`
+- Run `python backend/setup_database.py`
 
-2. **Audio Not Working**
-   - Check browser audio permissions
-   - Ensure Web Audio API is supported
-   - Try refreshing the page
+**Frontend won't start:**
+- Check Node.js version: `node --version`
+- Clear npm cache: `npm cache clean --force`
+- Delete `node_modules` and run `npm install`
 
-3. **Connection Issues**
-   - Verify both servers are running
-   - Check firewall settings
-   - Ensure ports 3000 and 8000 are available
+**Chat not working:**
+- Check if users are connected (use `/create-connection` endpoint)
+- Verify database connections
+- Check browser console for errors
 
-### Debug Mode
-Enable debug logging by setting environment variables:
+**AWS Bedrock errors:**
+- Verify AWS credentials
+- Check model access permissions
+- App will fallback to local poem generation
+
+### Manual Connection Creation
+If users can't connect automatically, create a manual connection:
 ```bash
-export DEBUG=1
+curl -X POST "http://localhost:8000/create-connection?user1_username=user1&user2_username=user2"
 ```
+
+## 🎨 Customization
+
+### Adding New Poem Templates
+Edit the `generate_poe_poem()` function in `backend/main.py` to add more Poe-style templates.
+
+### Styling Changes
+Modify `frontend/src/components/` for different gothic themes.
+
+### Audio Effects
+Update `frontend/src/components/AudioManager.js` for different sound effects.
+
+## 📝 API Endpoints
+
+- `POST /register` - Register new user
+- `GET /users` - Get all users
+- `POST /attempt-connection` - Attempt to connect
+- `GET /connections/{user_id}` - Get user connections
+- `GET /messages/{user_id}/{target_username}` - Get chat history
+- `POST /send-message` - Send a message
+- `POST /create-connection` - Manually create connection
 
 ## 🤝 Contributing
 
@@ -211,10 +227,24 @@ export DEBUG=1
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🎃 Happy Halloween!
+## 🎃 Happy Haunting!
 
-Enter the shadows, solve the riddles, and connect with souls through the mysterious poetry of Edgar Allan Poe. May your journey through the dark realm be filled with spooky encounters and gothic connections!
+Enjoy your spooky chat experience! The spirits of Edgar Allan Poe are watching...
 
 ---
 
-*"Once upon a midnight dreary, while I pondered, weak and weary..."* - Edgar Allan Poe
+**Need help?** Check the troubleshooting section or open an issue on GitHub.
+
+## 🔗 Quick Commands
+
+```bash
+# Start everything
+cd backend && python main.py &
+cd frontend && npm start
+
+# Test connection
+curl -X POST "http://localhost:8000/create-connection?user1_username=user1&user2_username=user2"
+
+# View API docs
+open http://localhost:8000/docs
+```

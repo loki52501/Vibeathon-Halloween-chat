@@ -7,7 +7,7 @@ import AudioManager from './components/AudioManager';
 import Registration from './pages/Registration';
 import UserList from './pages/UserList';
 import ConnectionAttempt from './pages/ConnectionAttempt';
-import Chat from './pages/Chat';
+import ChatSimple from './pages/ChatSimple';
 import './App.css';
 
 const AppContainer = styled.div`
@@ -110,9 +110,10 @@ const App = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Chat 
+                  <ChatSimple 
                     currentUser={currentUser}
                     audioManager={audioManager}
+                    onBack={() => window.history.back()}
                   />
                 </motion.div>
               } 
