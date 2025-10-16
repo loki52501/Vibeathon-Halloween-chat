@@ -1,0 +1,81 @@
+{
+  "poems": [
+    {
+      "title": "The Raven",
+      "excerpt": "Once upon a midnight dreary, while I pondered, weak and weary, Over many a quaint and curious volume of forgotten lore— While I nodded, nearly napping, suddenly there came a tapping, As of some one gently rapping, rapping at my chamber door.",
+      "themes": ["death", "loss", "grief", "madness", "supernatural"]
+    },
+    {
+      "title": "Annabel Lee",
+      "excerpt": "It was many and many a year ago, In a kingdom by the sea, That a maiden there lived whom you may know By the name of Annabel Lee; And this maiden she lived with no other thought Than to love and be loved by me.",
+      "themes": ["love", "death", "eternal", "sea", "angels"]
+    },
+    {
+      "title": "The Bells",
+      "excerpt": "Hear the sledges with the bells— Silver bells! What a world of merriment their melody foretells! How they tinkle, tinkle, tinkle, In the icy air of night!",
+      "themes": ["bells", "sound", "time", "life_cycle", "death"]
+    },
+    {
+      "title": "The Tell-Tale Heart",
+      "excerpt": "True!—nervous—very, very dreadfully nervous I had been and am; but why will you say that I am mad? The disease had sharpened my senses—not destroyed—not dulled them.",
+      "themes": ["madness", "guilt", "paranoia", "murder", "conscience"]
+    },
+    {
+      "title": "The Fall of the House of Usher",
+      "excerpt": "During the whole of a dull, dark, and soundless day in the autumn of the year, when the clouds hung oppressively low in the heavens, I had been passing alone, on horseback, through a singularly dreary tract of country.",
+      "themes": ["decay", "family", "house", "madness", "supernatural"]
+    },
+    {
+      "title": "The Masque of the Red Death",
+      "excerpt": "The 'Red Death' had long devastated the country. No pestilence had ever been so fatal, or so hideous. Blood was its Avatar and its seal—the redness and the horror of blood.",
+      "themes": ["death", "plague", "time", "inevitability", "masquerade"]
+    },
+    {
+      "title": "The Pit and the Pendulum",
+      "excerpt": "I was sick—sick unto death with that long agony; and when they at length unbound me, and I was permitted to sit, I felt that my senses were leaving me.",
+      "themes": ["torture", "fear", "death", "imprisonment", "psychological"]
+    },
+    {
+      "title": "The Cask of Amontillado",
+      "excerpt": "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that I gave utterance to a threat.",
+      "themes": ["revenge", "betrayal", "murder", "wine", "carnival"]
+    }
+  ],
+  "vocabulary": {
+    "gothic_words": [
+      "shadow", "darkness", "midnight", "grave", "tomb", "corpse", "ghost", "specter",
+      "phantom", "demon", "devil", "hell", "eternal", "infinite", "mystery", "secret",
+      "whisper", "scream", "moan", "lament", "weep", "mourn", "grieve", "despair"
+    ],
+    "poetic_devices": [
+      "alliteration", "assonance", "consonance", "rhyme", "rhythm", "meter",
+      "metaphor", "simile", "personification", "symbolism", "imagery"
+    ],
+    "atmospheric_words": [
+      "dreary", "melancholy", "lugubrious", "sepulchral", "funereal", "macabre",
+      "sinister", "ominous", "foreboding", "haunting", "eerie", "uncanny"
+    ]
+  },
+  "writing_style": {
+    "characteristics": [
+      "Dark, gothic atmosphere",
+      "Focus on death and the supernatural",
+      "Psychological depth and madness",
+      "Rich, ornate language",
+      "Repetitive, hypnotic rhythm",
+      "Symbolic imagery",
+      "First-person narrative",
+      "Exploration of human psyche"
+    ],
+    "common_themes": [
+      "Death and mortality",
+      "Love and loss",
+      "Madness and sanity",
+      "The supernatural",
+      "Revenge and justice",
+      "Time and eternity",
+      "Beauty and decay",
+      "Fear and terror"
+    ]
+  }
+}
